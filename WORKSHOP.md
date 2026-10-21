@@ -21,8 +21,8 @@ firebase login
 ### Get the code
 
 ```sh
-git clone https://github.com/Emmyu/spendwise.git
-cd spendwise        # the folder that contains pubspec.yaml
+git clone THE-REPO-LINK-FROM-THE-ORGANISERS
+cd THE-FOLDER-IT-CREATES        # the folder that contains pubspec.yaml
 ```
 
 Every command in this guide is run **inside that folder**.
