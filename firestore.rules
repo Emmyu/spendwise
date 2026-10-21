@@ -1,0 +1,26 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // WORKSHOP ONLY. Anyone who has the app can read and write this demo
+    // account, because there is no login. That is fine for a throwaway
+    // project, and NOT fine for real users. For a real app, add Firebase
+    // Authentication and check request.auth.uid here.
+    match /accounts/demo/transactions/{id} {
+      allow read, delete: if true;
+      allow create, update: if validExpense(request.resource.data);
+    }
+
+    // Even for a demo, refuse nonsense. The same checks live in the app.
+    function validExpense(d) {
+      return d.keys().hasOnly(['desc', 'category', 'amount', 'date', 'time', 'note', 'source', 'createdAt'])
+        && d.desc is string && d.desc.size() > 0 && d.desc.size() <= 80
+        && d.category in ['food', 'transport', 'shopping', 'bills', 'other']
+        && d.amount is number && d.amount > 0 && d.amount <= 10000000
+        && d.date is string && d.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && d.source in ['manual', 'ai']
+        && (!('note' in d) || (d.note is string && d.note.size() <= 500));
+    }
+  }
+}

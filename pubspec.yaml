@@ -1,0 +1,50 @@
+name: spendwise
+description: "SpendWise AI: record expenses and understand your spending in plain language."
+publish_to: 'none'
+
+version: 0.9.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  provider: ^6.1.5+1
+  lucide_icons_flutter: ^3.1.25
+  flutter_native_splash: ^2.4.7
+  firebase_core: ^5.0.0
+  cloud_firestore: ^7.0.0
+  firebase_ai: ^5.0.0
+  http: ^1.6.0
+  firebase_remote_config: ^7.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  fonts:
+    # Variable font with wght (100–900) and wdth (62–125) axes.
+    # Default wght is 600, so AppText always sets the wght axis explicitly.
+    - family: Archivo
+      fonts:
+        - asset: assets/fonts/Archivo-Variable.ttf
+
+# Native launch splash (Android, iOS, web), shown until Flutter's first frame.
+# Regenerate after changing: dart run flutter_native_splash:create
+# Images come from the prototype's brand mark; see assets/splash/.
+flutter_native_splash:
+  color: "#CBDDD3"
+  image: assets/splash/splash_logo.png # 120 dp, provided at 4x
+  android_12:
+    # Android 12+ masks the icon to a circle: a green circle with the mint sparkle.
+    color: "#CBDDD3"
+    image: assets/splash/splash_android12.png
+    icon_background_color: "#1E4D3A"
+  web: true
+  web_image_mode: center
