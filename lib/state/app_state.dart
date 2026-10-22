@@ -510,8 +510,7 @@ class AppState extends ChangeNotifier {
     _busy = const BusyState('Understanding your request');
     notifyListeners();
 
-    _ai
-        .respond(AssistantRequest(
+    _respondWithRetry(AssistantRequest(
           text: text,
           transactions: () => transactions,
           today: today,
@@ -542,6 +541,19 @@ class AppState extends ChangeNotifier {
   }
 
   /// The only place an AI-proposed expense is ever written to the database.
+  /// Asks the assistant. If the connection drops (it happens on busy Wi-Fi), start a
+  /// fresh chat and try once more, so a blip doesn't cost the user their question.
+  Future<ChatMessage> _respondWithRetry(AssistantRequest request) async {
+    try {
+      return await _ai.respond(request);
+    } catch (e) {
+      debugPrint('Assistant error, trying once more with a fresh chat: $e');
+      _ai.reset();
+      await Future<void>.delayed(const Duration(milliseconds: 600));
+      return _ai.respond(request);
+    }
+  }
+
   Future<void> confirmProposal(String messageId) async {
     final proposal = _messages.where((m) => m.id == messageId).firstOrNull?.proposal;
     if (proposal == null) return;

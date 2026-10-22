@@ -98,6 +98,18 @@ class ProposingAssistant extends SlowAssistant {
       );
 }
 
+/// The first request fails like a dropped Wi-Fi connection; the second works.
+class DropsOnceAssistant extends SlowAssistant {
+  int calls = 0;
+
+  @override
+  Future<ChatMessage> respond(AssistantRequest request) async {
+    calls++;
+    if (calls == 1) throw Exception('Software caused connection abort');
+    return ChatMessage(id: request.nextId(), role: ChatRole.ai, text: 'Second time lucky');
+  }
+}
+
 void main() {
   group('InMemoryTransactionRepository', () {
     test('add, update and delete notify watchers', () async {
@@ -232,8 +244,24 @@ void main() {
       s.send('hello');
       assistant.answer.completeError(Exception('App Check token rejected'));
       await tester.pump();
+      await tester.pump(const Duration(seconds: 1)); // it tries once more before giving up
       expect(s.busy, isNull);
       expect(s.messages.last.text, contains('couldn’t reach the assistant'));
+      expect(assistant.resets, greaterThan(0)); // the retry starts a fresh chat
+      s.dispose();
+    });
+
+    testWidgets('a dropped connection is retried once, with a fresh chat, and the user gets the answer', (tester) async {
+      final assistant = DropsOnceAssistant();
+      final s = AppState(assistant: assistant, initial: DesignState.aiInitial);
+      final resetsBefore = assistant.resets;
+      s.send('hello');
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      expect(assistant.calls, 2);
+      expect(assistant.resets, resetsBefore + 1);
+      expect(s.messages.last.text, 'Second time lucky');
+      expect(s.busy, isNull);
       s.dispose();
     });
 

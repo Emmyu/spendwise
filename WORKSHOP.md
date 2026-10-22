@@ -87,7 +87,7 @@ Each step builds on the one before it, so **if you fall behind, just run the ste
 | `dart run tool/step.dart 2` | **Give it hands: `add_expense`** | A tool is a name, a description and its arguments. Gemini *asks* for it, your code builds a **proposal**. Nothing is saved. |
 | `dart run tool/step.dart 3` | **Save for real: Firestore** | **Confirm** is the only thing that writes. Home and Transactions update live. |
 | `dart run tool/step.dart 4` | **More hands: `get_spending_summary`** | Your Dart code adds up the money; Gemini only words the answer. *The code does the maths.* |
-| `dart run tool/step.dart 5` | **Change the model without an app update** | Remote Config. After this step, add a parameter `gemini_model` (String) in the console, *Run → Remote Config*, with the value `gemini-3.5-flash-lite`, and **Publish**. Change it to `gemini-3.8-flash`, publish, tap **New chat** and ask something. The header shows which model answered. |
+| `dart run tool/step.dart 5` | **Change the model without an app update** | Remote Config. After this step, add a parameter `gemini_model` (String) in the console, *Run → Remote Config*, with the value `gemini-3.5-flash-lite`, and **Publish**. Change it to `gemini-3.5-flash`, publish, tap **New chat** and ask something. The header shows which model answered. |
 | `dart run tool/step.dart 6` | **New skills with no app update: MCP** | A small server (running on your own laptop) offers a tool: *naira → dollars*. Your app asks "what can you do?" and hands the answer to Gemini. |
 
 **Step 6 needs the little server running.** In a **second terminal** (leave it open):
@@ -116,7 +116,7 @@ flutter run -d chrome --dart-define=MCP_URL=http://localhost:8080/mcp
 | The app is slow to start or won't start | Not enough memory, or the device is still starting up | Wait until your device is fully started and `flutter devices` lists it. Close other heavy apps |
 | `dart run tool/step.dart 3` says it can't find files | You are not in the project folder | `cd` into the folder that contains `pubspec.yaml`, then run it again |
 | Expenses don't save, toast says *"Couldn't save"* | Firestore rules not deployed, or no connection | `firebase deploy --only firestore:rules --project YOUR_PROJECT_ID` |
-| *"model not found"* in the terminal | Typo in the `gemini_model` Remote Config value | Use exactly `gemini-3.5-flash-lite` or `gemini-3.8-flash` |
+| *"model not found"* in the terminal | Typo in the `gemini_model` Remote Config value | Use exactly `gemini-3.5-flash-lite` or `gemini-3.5-flash` |
 | The MCP tool is never used | The app reads the tool list when a chat starts | Tap **New chat**; check the address ends in `/mcp` |
 | Nothing works and the Wi-Fi is crowded | 100 people, one router | `flutter run --dart-define=SPENDWISE_OFFLINE_DEMO=true` runs everything offline with sample expenses and a scripted chatbot |
 
