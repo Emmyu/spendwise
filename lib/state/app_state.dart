@@ -62,6 +62,7 @@ class AppState extends ChangeNotifier {
     DateTime? today,
     DesignState initial = DesignState.home,
   })  : _ai = assistant ?? MockAiAssistant(today: today),
+        _loadsSampleData = repository == null,
         _repo = repository ?? InMemoryTransactionRepository(),
         today = today ?? kToday {
     _seedAi = MockAiAssistant(today: this.today);
@@ -72,6 +73,11 @@ class AppState extends ChangeNotifier {
 
   final AiAssistant _ai;
   final TransactionRepository _repo;
+
+  /// Only when no repository was passed in (tests, previews): then the sample
+  /// expenses are loaded. A repository you pass in is used exactly as it is, so a
+  /// fresh app starts empty.
+  final bool _loadsSampleData;
 
   /// Used only to seed the design-state conversations.
   late final MockAiAssistant _seedAi;
@@ -625,7 +631,7 @@ class AppState extends ChangeNotifier {
       DesignState.aiError,
     }.contains(s);
     final repo = _repo;
-    if (repo is InMemoryTransactionRepository) {
+    if (_loadsSampleData && repo is InMemoryTransactionRepository) {
       _all = [...baseTransactions, if (withLunch) lunchTransaction];
       repo.reset(_all);
     }

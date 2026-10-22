@@ -8,6 +8,7 @@ import 'firebase_options.dart';
 import 'services/ai_assistant.dart';
 import 'services/gemini_assistant.dart';
 import 'services/mock_ai.dart';
+import 'services/not_connected_assistant.dart';
 import 'services/remote_settings.dart';
 import 'utils/dates.dart';
 
@@ -38,22 +39,24 @@ const _mockAi = bool.fromEnvironment('SPENDWISE_MOCK_AI');
 
 
 /// Starts Firebase and builds the services. If Firebase isn't set up yet, the
-/// app still opens, on demo data, and says so.
+/// app still opens, empty, and says the assistant isn't connected.
 Future<AppServices> bootstrap() async {
-  AppServices offline([String? notice]) => AppServices(
-        repository: InMemoryTransactionRepository(),
-        assistant: MockAiAssistant(),
-        today: kToday,
-        notice: notice,
-      );
-
-  if (_offlineDemo) return offline();
+  // Asked for on purpose: the sample expenses and the scripted chatbot.
+  if (_offlineDemo) {
+    return AppServices(repository: InMemoryTransactionRepository(), assistant: MockAiAssistant(), today: kToday);
+  }
 
   try {
     return await _startFirebase().timeout(const Duration(seconds: 20));
   } catch (e) {
-    debugPrint('Firebase is not ready, running the offline demo instead: $e');
-    return offline('Firebase isn’t connected yet, so this is demo data. See WORKSHOP.md.');
+    debugPrint('Firebase is not ready yet: $e');
+    // A fresh, empty app. Nothing is saved, and the chat says it isn't connected.
+    return AppServices(
+      repository: InMemoryTransactionRepository(seed: const []),
+      assistant: NotConnectedAssistant(),
+      today: dateOnly(DateTime.now()),
+      notice: 'Firebase isn’t connected yet, so nothing is saved. See WORKSHOP.md.',
+    );
   }
 }
 
@@ -68,7 +71,6 @@ Future<AppServices> _startFirebase() async {
   // ── Firestore: where expenses are stored ─────────────────────────────────
   final today = dateOnly(DateTime.now());
   final repository = FirestoreTransactionRepository();
-  await repository.seedIfEmpty(today);
 
   // ── The assistant ────────────────────────────────────────────────────────
   final AiAssistant assistant = _mockAi

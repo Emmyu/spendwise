@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart' hide Transaction;
 import '../models/category.dart';
 import '../models/transaction.dart';
 import '../utils/dates.dart';
-import 'mock_data.dart';
 import 'transaction_repository.dart';
 
 /// Expenses stored in Cloud Firestore: `accounts/demo/transactions/{id}`.
@@ -44,18 +43,6 @@ class FirestoreTransactionRepository implements TransactionRepository {
 
   @override
   Future<void> delete(String id) => _col.doc(id).delete().timeout(_writeTimeout);
-
-  /// First run only: fills an empty account with the demo expenses, dated
-  /// around [today], so Home and "this week" questions have something to show.
-  Future<void> seedIfEmpty(DateTime today) async {
-    final existing = await _col.limit(1).get();
-    if (existing.docs.isNotEmpty) return;
-    final batch = _col.firestore.batch();
-    for (final tx in demoTransactionsFor(today)) {
-      batch.set(_col.doc(tx.id), _toMap(tx));
-    }
-    await batch.commit();
-  }
 
   static Map<String, Object?> _toMap(Transaction tx) => {
         'desc': tx.desc,

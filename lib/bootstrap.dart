@@ -1,7 +1,7 @@
-import 'data/mock_data.dart';
 import 'data/transaction_repository.dart';
 import 'services/ai_assistant.dart';
-import 'services/mock_ai.dart';
+import 'services/not_connected_assistant.dart';
+import 'utils/dates.dart';
 
 /// What the app runs on.
 class AppServices {
@@ -16,15 +16,15 @@ class AppServices {
   final AiAssistant assistant;
   final DateTime today;
 
-  /// Shown once at start-up, e.g. why we are in offline demo mode.
+  /// Shown once at start-up, e.g. why Firebase isn't connected.
   final String? notice;
 }
 
 /// Builds everything the app runs on.
 ///
-/// RIGHT NOW the app is a CHATBOT: demo data in memory, and a scripted
-/// assistant that matches keywords. During the workshop you turn it into an
-/// AGENT by filling in the TODOs below, one step at a time.
+/// RIGHT NOW the app has no brain: it starts empty (₦0, no expenses), and the
+/// Ask AI chat says the assistant isn't connected yet. During the workshop you
+/// turn it into an AGENT by filling in the TODOs below, one step at a time.
 Future<AppServices> bootstrap() async {
   // TODO(step 1): start Firebase, the door to Gemini:
   //   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -35,14 +35,13 @@ Future<AppServices> bootstrap() async {
 
   // TODO(step 3): store expenses in Firestore instead of in memory:
   //   final repository = FirestoreTransactionRepository();
-  //   await repository.seedIfEmpty(today);
 
-  // TODO(step 1): use Gemini instead of the scripted chatbot:
+  // TODO(step 1): use Gemini instead of the "not connected" assistant:
   //   GeminiAssistant(today: today, modelName: settings.geminiModel)
 
   return AppServices(
-    repository: InMemoryTransactionRepository(),
-    assistant: MockAiAssistant(),
-    today: kToday,
+    repository: InMemoryTransactionRepository(seed: const []),
+    assistant: NotConnectedAssistant(),
+    today: dateOnly(DateTime.now()),
   );
 }

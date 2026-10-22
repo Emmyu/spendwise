@@ -64,5 +64,5 @@ void main(List<String> args) {
   for (final f in changed) {
     print('  $f');
   }
-  print('\nNow restart the app (press R in the terminal, or stop it and run `flutter run` again).');
+  print('\nNow restart the app: press a CAPITAL R in the terminal (not lowercase r), or stop it and run `flutter run` again.');
 }

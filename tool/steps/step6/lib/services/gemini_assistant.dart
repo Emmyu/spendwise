@@ -36,7 +36,7 @@ class GeminiAssistant implements AiAssistant {
   Set<String> _mcpToolNames = {};
 
   @override
-  String? get label => _model == null ? null : 'Gemini · $_model';
+  String? get label => _model == null ? null : 'Gemini · $_model${_mcpToolNames.isEmpty ? '' : ' · MCP'}';
 
   @override
   void reset() => _chat = null; // the next message starts a fresh conversation
@@ -52,7 +52,9 @@ class GeminiAssistant implements AiAssistant {
     // Our tools, plus whatever the MCP server offers right now.
     final tools = [...builtInTools];
     _mcpToolNames = {};
-    if (mcp != null) {
+    if (mcp == null) {
+      debugPrint('MCP: no server address, so only our own tools are on. Start the app with --dart-define=MCP_URL=http://localhost:8080/mcp');
+    } else {
       try {
         await mcp!.initialize();
         final menu = await mcp!.listTools();

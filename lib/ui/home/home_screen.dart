@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/mock_data.dart';
 import '../../state/app_state.dart';
 import '../../theme/colors.dart';
 import '../../theme/text.dart';
@@ -47,6 +46,17 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 4),
+                  if (recent.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6, bottom: 14),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'No expenses yet.',
+                          style: AppText.style(13.5, color: AppColors.ink4),
+                        ),
+                      ),
+                    ),
                   for (final (i, tx) in recent.indexed)
                     TxRow(tx: tx, showDate: true, showDivider: i > 0),
                 ],
@@ -95,7 +105,7 @@ class _Header extends StatelessWidget {
           height: 44,
           alignment: Alignment.center,
           decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-          child: Text(kUserInitials, style: AppText.style(15, weight: 600, color: AppColors.avatarText)),
+          child: const Icon(LucideIcons.user, size: 20, color: AppColors.avatarText),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -103,7 +113,7 @@ class _Header extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(greeting(DateTime.now()), style: AppText.style(13, color: AppColors.ink3)),
-              Text(kUserFirstName, style: AppText.style(19, weight: 600, tracking: -0.01)),
+              Text('SpendWise', style: AppText.style(19, weight: 600, tracking: -0.01)),
             ],
           ),
         ),

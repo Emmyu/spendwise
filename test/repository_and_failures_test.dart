@@ -162,13 +162,13 @@ void main() {
       expect(s.form!.saving, isFalse);
       expect(s.form!.amount, '8,000');
       expect(s.toast, startsWith('Couldn’t save'));
-      expect(s.monthTotal, 128000);
+      expect(s.monthTotal, 123500); // the sample data, without the extra lunch the gallery adds
 
       repo.offline = false; // the Wi-Fi comes back; same form, try again
       s.saveForm();
       await tester.pump(const Duration(milliseconds: 100));
       expect(s.overlay, OverlayKind.none);
-      expect(s.monthTotal, 136000);
+      expect(s.monthTotal, 131500); // + the ₦8,000 that finally saved
       await tester.pump(const Duration(seconds: 3));
       s.dispose();
     });

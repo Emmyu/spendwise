@@ -26,8 +26,4 @@ class FirestoreTransactionRepository implements TransactionRepository {
   @override
   Future<void> delete(String id) => throw UnimplementedError('TODO(step 3)');
 
-  /// First run only: fills an empty account with the demo expenses.
-  Future<void> seedIfEmpty(DateTime today) async {
-    // TODO(step 3): if the collection is empty, write demoTransactionsFor(today)
-  }
 }

@@ -6,8 +6,6 @@ import '../models/transaction.dart';
 /// data is wired in.
 final kToday = DateTime(2026, 10, 13);
 
-const kUserFirstName = 'Adaeze';
-const kUserInitials = 'AO';
 const kAppVersion = 'SpendWise AI · version 0.9 (workshop build)';
 
 Transaction _tx(

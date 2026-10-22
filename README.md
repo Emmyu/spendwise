@@ -1,6 +1,6 @@
 # SpendWise AI: workshop starter
 
-A naira expense tracker in Flutter. In the workshop you turn its scripted chatbot into an **AI agent** with Gemini and Firebase.
+A naira expense tracker in Flutter. It starts empty, with no AI. In the workshop you give it a brain and turn it into an **AI agent** with Gemini and Firebase.
 
 > **Gemini is the brain. Our code is the hands. The code does the maths, never the AI.**
 
@@ -8,7 +8,7 @@ A naira expense tracker in Flutter. In the workshop you turn its scripted chatbo
 
 1. Follow **[WORKSHOP.md](WORKSHOP.md)** to set up your own free Firebase project (about 15 minutes, do it before the day).
 2. Run the app: `flutter run`
-3. During the session, add each step's code with one command (run it inside this folder):
+3. During the session, add each step's code with one command (run it inside this folder, then press a **capital R** in the terminal to restart the app, or stop it and run `flutter run` again):
 
 ```sh
 dart run tool/step.dart 1    # Gemini says hello

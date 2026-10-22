@@ -248,6 +248,13 @@ class CategoryBreakdownCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 14),
+          if (rows.isEmpty) Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: Text(
+                'Nothing yet. Add an expense, or ask the AI to record one.',
+                style: AppText.style(13.5, color: AppColors.ink4),
+              ),
+            ),
           if (rows.isNotEmpty) ...[
             ClipRRect(
               borderRadius: BorderRadius.circular(5),
